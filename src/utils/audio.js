@@ -9,7 +9,7 @@ const H_BAR = H_CANVAS - MARGIN * 2
 const SPACE_BAR = 1
 
 class Audio {
-  constructor() {
+  constructor () {
     this.playNext = this.playNext.bind(this)
     this.detectBeat = this.detectBeat.bind(this)
     this.update = this.update.bind(this)
@@ -57,7 +57,7 @@ class Audio {
     this.lastTime = performance.now()
   }
 
-  start({ onLoad = null, live = true, showPreview = false, analyse = true, debug = false, playlist = ['./assets/audio/doitagain.mp3'], shutup = false } = {}) {
+  start ({ onLoad = null, live = true, showPreview = false, analyse = true, debug = false, playlist = ['./assets/audio/doitagain.mp3'], shutup = false } = {}) {
     // if (playlist.length === 0) return
     this.debug = debug
     this.playlist = playlist
@@ -92,7 +92,7 @@ class Audio {
     }
   }
 
-  playNext() {
+  playNext () {
     this.currentPlay++
     if (this.currentPlay >= this.playlist.length) {
       this.currentPlay = 0
@@ -115,13 +115,13 @@ class Audio {
     this.audioSource.connect(this.masterGain)
   }
 
-  onAllowedClick() {
+  onAllowedClick () {
     this.audio.play()
     this.btn.removeEventListener('click', this.onAllowedClick)
     document.body.removeChild(this.btn)
   }
 
-  analyse() {
+  analyse () {
     this.analyser = this.context.createAnalyser()
     this.analyser.smoothingTimeConstant = 0.3
     this.analyser.fftSize = this.fftSize
@@ -150,7 +150,7 @@ class Audio {
     this.update()
   }
 
-  update() {
+  update () {
     const t = performance.now()
     const dt = t - this.lastTime
     this.lastTime = t
@@ -242,7 +242,7 @@ class Audio {
     this.detectBeat(dt)
   }
 
-  getAverage(idx) {
+  getAverage (idx) {
     const step = this.binCount / this.audioRange >> 0
 
     let value = 0
@@ -256,7 +256,7 @@ class Audio {
     return value / step
   }
 
-  detectBeat(dt) {
+  detectBeat (dt) {
     this.volumeHistory.shift(1)
     this.volumeHistory.push(this.volume)
 
@@ -279,7 +279,7 @@ class Audio {
   }
 
   // advanced feature
-  addAudioRangeTexture(audioRangeTexture) {
+  addAudioRangeTexture (audioRangeTexture) {
     this.audioRangeTexture = audioRangeTexture
   }
 }
