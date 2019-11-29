@@ -12,6 +12,7 @@ uniform float uTime;
 
 varying vec2 vUv;
 varying float vHeight;
+varying float vRipple;
 
 void main() {
   vUv = uv;
@@ -24,11 +25,12 @@ void main() {
 	float ripple = cos(sin(dist * uWave - uTime * uVelocity));
 
 	ripple = smoothstep(0.5, 1., ripple) * max(1. - dist, 0.);
-	// ripple *= (1. - (dist * 6.5)) * uAnimation;
+	ripple *= (1. - (dist * 6.5)) * .4;
 
 	pos.z += uAmplitude * ripple;
 
 	vHeight = pos.z;
+	vRipple = ripple;
 
   vec4 modelViewPosition = modelViewMatrix * vec4(pos, 1.0);
   gl_Position = projectionMatrix * modelViewPosition;

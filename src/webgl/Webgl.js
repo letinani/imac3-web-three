@@ -15,10 +15,14 @@ import Stats from 'stats.js'
 
 import Objects from './objects/Objects'
 import Ground from './objects/ground/Ground'
+import Logo from './objects/Logo'
+import Dust from './objects/dust/Dust'
+import SkySphere from './objects/SkySphere/SkySphere'
 
 import createComposer from './postfx/Composer'
 
 import audio from 'utils/audio'
+import preloader from 'utils/preloader'
 
 export default class Webgl {
   constructor ($parent) {
@@ -26,6 +30,9 @@ export default class Webgl {
     this.render = this.render.bind(this)
     this.onResize = this.onResize.bind(this)
     this.onBeat = this.onBeat.bind(this)
+    this.onPreloader = this.onPreloader.bind(this)
+
+    this.isReady = false
 
     this.renderer = new WebGLRenderer({
       antialias: true
@@ -63,16 +70,28 @@ export default class Webgl {
     this.stats.showPanel(0)
     $parent.appendChild(this.stats.dom)
 
-    this.initObjects()
-
     this.onResize()
-    this.render()
 
     // if you don't want to hear the music, but keep analysing it, set 'shutup' to 'true'!
-    audio.start({ live: false, shutup: true, showPreview: true, debug: true })
+    audio.start({ live: false, shutup: true, showPreview: true, debug: false })
     audio.onBeat.add(this.onBeat)
 
+    // this.init()
+
+    var manifest = [
+      { type: 'GLTFModel', url: './assets/models/logo-imac2.gltf', id: 'logoIMAC' },
+      { type: 'Texture', url: './assets/textures/particle1.png', id: 'p1' }
+    ]
+
+    preloader.load(manifest, this.onPreloader)
+
     window.addEventListener('resize', this.onResize, false)
+  }
+
+  onPreloader () {
+    this.isReady = true
+    this.initObjects()
+    this.render()
   }
 
   onResize () {
@@ -89,14 +108,26 @@ export default class Webgl {
   initObjects () {
     this.objects = new Objects()
     this.objects.position.set(0, 4, 0)
-    this.scene.add(this.objects)
+    // this.scene.add(this.objects)
 
-    this.ground = new Ground(20)
+    this.dust = new Dust()
+    this.scene.add(this.dust)
+
+    this.sky = new SkySphere({ radius: 20 })
+    this.scene.add(this.sky)
+
+    this.ground = new Ground(50)
     this.ground.position.set(0, -4, 0)
     this.scene.add(this.ground)
+
+    this.logo = new Logo()
+    this.logo.position.set(0, 1, 0)
+    this.scene.add(this.logo)
   }
 
   render () {
+    if (!this.isReady) return
+    console.log('oo')
     this.stats.begin()
 
     this.currentTime++
