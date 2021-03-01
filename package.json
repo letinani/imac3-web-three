@@ -37,6 +37,6 @@
     "postprocessing": "^6.8.3",
     "signals": "^1.0.0",
     "stats.js": "0.17.0",
-    "three": "0.109.0"
+    "three": "0.125.0"
   }
 }
